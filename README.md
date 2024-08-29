@@ -14,11 +14,15 @@ pip install -r requirements.txt
 python3 finetune_legalbert_with_sliding_window.py ${theme_name} ${test_defendant}
 ```
 
-`theme_name`: one of `Emotions`, `Parent`, `Manipulative`, `Cheating`
-`test_defendant`: one value in the `defendant` column in `./data/annotated_transcript.csv`. 
+    * `theme_name`: one of `Emotions`, `Parent`, `Manipulative`, `Cheating`
+    * `test_defendant`: one value in the `defendant` column in `./data/annotated_transcript.csv`. 
 
-2. Calculate precision, recall, and f1-score for every theme and every defendant (trial). 
+2. Run coreference resolution:
 ```sh
-python3 evaluate_predictions.py
+python3 run_coreference_resolution.py
 ```
 
+3. Combine theme prediction and coreference resolution results:
+```sh
+python3 combine_pred_and_coref.py ${theme_name}
+```
