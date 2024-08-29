@@ -9,13 +9,13 @@ pip install -r requirements.txt
 ```
 
 ## Steps
-1. Finetune legalbert and make predictions
+1. Finetune legalbert and make predictions:
 ```sh
-python3 finetune_legalbert_with_sliding_window.py ${theme_name} ${test_defendant}
+python3 finetune_legalbert.py ${theme_name} ${test_defendant}
 ```
 
-    * `theme_name`: one of `Emotions`, `Parent`, `Manipulative`, `Cheating`
-    * `test_defendant`: one value in the `defendant` column in `./data/annotated_transcript.csv`. 
+* `theme_name`: one of `Emotions`, `Parent`, `Manipulative`, `Cheating`
+* `test_defendant`: one value in the `defendant` column in `./data/annotated_transcript.csv`. 
 
 2. Run coreference resolution:
 ```sh
