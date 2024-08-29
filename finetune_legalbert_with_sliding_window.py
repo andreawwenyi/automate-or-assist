@@ -32,12 +32,13 @@ else:
 print(f"Prepare dataset: {theme}, {test_defendant}")
 full = pd.read_csv(dataset_path)
 
-df = pd.DataFrame()
+# --- Preparing sliding window data --- #
+sliding_window_df = pd.DataFrame()
+
 for defendant in full["defendant"].unique():
     print(defendant)
-    d = full[full["file_id"] == defendant.replace(" ", "_")].copy()
+    d = full[full["defendant"] == defendant].copy()
     d["idx"] = d["paragraph_id"].apply(lambda x: x.split("-")[-1])
-    d["formatted_text"] = d.apply(lambda r: f"{r['text']}", axis=1)
 
     paragraph_series = d["text"].shift(0)
     for w in range(1, window_size):
@@ -64,12 +65,14 @@ for defendant in full["defendant"].unique():
         lambda p: re.sub("\s?[\d]+\s", " ", p).strip()
     )
 
-    df = pd.concat((df, x))
+    sliding_window_df = pd.concat((sliding_window_df, x))
 
-train_df = df[df["defendant"] != test_defendant].copy()
-test_df = df[df["defendant"] == test_defendant].copy()
+# --- Prepare training and test dataframe --- #
+train_df = sliding_window_df[sliding_window_df["defendant"] != test_defendant].copy()
+test_df = sliding_window_df[sliding_window_df["defendant"] == test_defendant].copy()
 
 n_positives = len(train_df[train_df["label"] == 1])
+
 # undersampling
 train_df = pd.concat(
     (
@@ -78,10 +81,9 @@ train_df = pd.concat(
     )
 )
 train_df = train_df.sample(frac=1)
-
 train_set = Dataset.from_pandas(train_df)
 
-# Load tokenizer and model
+# --- Load tokenizer and model --- #
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(
     model_name,
