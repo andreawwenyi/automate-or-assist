@@ -9,12 +9,12 @@ pip install -r requirements.txt
 ```
 
 ## Steps
-1. Finetune legalbert and make predictions:
+1. Finetune LEGAL-BERT and make predictions:
 ```sh
 python3 finetune_legalbert.py ${theme_name} ${test_defendant}
 ```
 
-* `theme_name`: one of `Emotions`, `Parent`, `Manipulative`, `Cheating`
+* `theme_name`: one of `EMOT`, `MOM`, `NORM`, `SEX`
 * `test_defendant`: one value in the `defendant` column in `./data/annotated_transcript.csv`. 
 
 2. Run coreference resolution:
@@ -26,3 +26,5 @@ python3 run_coreference_resolution.py
 ```sh
 python3 combine_pred_and_coref.py ${theme_name}
 ```
+
+* `theme_name`: one of `EMOT`, `MOM`, `NORM`, `SEX`
