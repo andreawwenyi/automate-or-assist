@@ -4,7 +4,7 @@ import re
 import torch
 from fastcoref import LingMessCoref
 
-full = pd.read_csv("./data/maxqda_full_transcript.csv")
+full = pd.read_csv("./data/annotated_transcripts.csv")
 window_size = 20
 
 if torch.cuda.is_available():

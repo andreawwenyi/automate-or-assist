@@ -7,7 +7,7 @@ import pandas as pd
 theme = sys.argv[1]
 model = "legal-bert-base-uncased"
 
-full = pd.read_csv("./data/maxqda_full_transcript.csv")
+full = pd.read_csv("./data/annotated_transcripts.csv")
 coref = pd.read_csv("./data/coref.csv")
 
 pred_true = dict()
@@ -42,14 +42,9 @@ for f in Path("./predictions/").glob(f"{model}_sliding_{theme}_*.json"):
     final = final[final['highlight_coref']>=1].sort_values("mean_score",ascending=False)
     final['n_sentences'] = final['sentence_id'].apply(lambda s: len(s.split(", ")))
     precision.append({"defendant": defendant, "precision": round(final[final['mean_score']>0.9][theme].sum()/len(final[final['mean_score']>0.9]), 3)})
-    # print(f"\tn_paragraphs > 0.9: {len(final[final['mean_score']>0.9])}, n_sentences: {final[final['mean_score']>0.9]['n_sentences'].sum()}, precision: {final[final['mean_score']>0.9][theme].sum()/len(final[final['mean_score']>0.9]):.3f}")
-    # print(f"\tprecision @ 3: {final[:3][theme].sum() / 3:.3f}")
+
     final['pred'] = 1
     final = final.rename({"highlight_sentence": "paragraph", "highlight_coref": "mentions_defendant"}, axis=1)
 
     pred_true[defendant] = final
 print(precision)
-
-# with pd.ExcelWriter(f'./data/{theme}_pred_true_paragraph.xlsx') as writer:  
-#     for key, df in pred_true.items():
-#         df.to_excel(writer, sheet_name=key)

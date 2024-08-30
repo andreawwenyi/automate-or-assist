@@ -21,7 +21,7 @@ test_defendant = sys.argv[2]
 model_name = "nlpaueb/legal-bert-base-uncased"
 max_length = 512
 window_size = 10
-dataset_path = "./data/maxqda_full_transcript.csv"
+dataset_path = "./data/annotated_transcripts.csv"
 
 torch.cuda.empty_cache()
 if torch.cuda.is_available():
